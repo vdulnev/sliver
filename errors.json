@@ -1,0 +1,59 @@
+Trajectory ID: 935c9f2e-aaab-46e4-9599-33a7a4a23437
+Error: HTTP 503 Service Unavailable
+Sherlog: 
+TraceID: 0x62c2efa777b2a610
+Headers: {
+    "Alt-Svc": [
+        "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+    ],
+    "Content-Length": [
+        "415"
+    ],
+    "Content-Type": [
+        "text/event-stream"
+    ],
+    "Date": [
+        "Tue, 24 Feb 2026 15:22:57 GMT"
+    ],
+    "Server": [
+        "ESF"
+    ],
+    "Server-Timing": [
+        "gfet4t7; dur=306"
+    ],
+    "Vary": [
+        "Origin",
+        "X-Origin",
+        "Referer"
+    ],
+    "X-Cloudaicompanion-Trace-Id": [
+        "62c2efa777b2a610"
+    ],
+    "X-Content-Type-Options": [
+        "nosniff"
+    ],
+    "X-Frame-Options": [
+        "SAMEORIGIN"
+    ],
+    "X-Xss-Protection": [
+        "0"
+    ]
+}
+
+{
+    "error": {
+        "code": 503,
+        "details": [
+            {
+                "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+                "domain": "cloudcode-pa.googleapis.com",
+                "metadata": {
+                    "model": "claude-sonnet-4-6"
+                },
+                "reason": "MODEL_CAPACITY_EXHAUSTED"
+            }
+        ],
+        "message": "No capacity available for model claude-sonnet-4-6 on the server",
+        "status": "UNAVAILABLE"
+    }
+}

@@ -19,7 +19,25 @@ const List<Lesson> courseLessons = [
   ),
   Lesson(
     title: 'Lesson 4: SliverPersistentHeader',
-    description: 'Create custom sticky headers within your scroll views.',
+    description: 'Create custom sticky and floating section headers.',
     routeName: '/lesson4',
+  ),
+  Lesson(
+    title: 'Lesson 5: SliverFillRemaining',
+    description:
+        'Pin content to the bottom of the screen — great for forms and empty states.',
+    routeName: '/lesson5',
+  ),
+  Lesson(
+    title: 'Lesson 6: SliverFillViewport',
+    description:
+        'Create full-viewport page-like slides that fill the entire screen.',
+    routeName: '/lesson6',
+  ),
+  Lesson(
+    title: 'Lesson 7: Capstone — Product Catalog',
+    description:
+        'A real-world catalog combining all slivers: AppBar, headers, grid, and fill.',
+    routeName: '/lesson7',
   ),
 ];

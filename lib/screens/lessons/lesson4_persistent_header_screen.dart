@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/info_box.dart';
 
 class Lesson4PersistentHeaderScreen extends StatelessWidget {
   const Lesson4PersistentHeaderScreen({super.key});
@@ -11,54 +12,104 @@ class Lesson4PersistentHeaderScreen extends StatelessWidget {
         slivers: [
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 4),
               child: Text(
-                'Sticky Headers',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                'Sticky & Floating Headers',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: _CustomHeaderDelegate(
-              minHeight: 60,
-              maxHeight: 150,
-              title: 'Section 1 (Pinned)',
-              color: Colors.blueAccent,
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              child: Text(
+                'SliverPersistentHeader lets you insert a header between slivers that can be pinned or float as you scroll. It requires a custom delegate to define its min/max height and how it paints.',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: InfoBox(
+              type: InfoBoxType.info,
+              title: 'pinned vs floating',
+              body:
+                  '• pinned: true → header always stays at the top of the viewport\n'
+                  '• floating: true → header reappears immediately when scrolling up\n'
+                  '• Both false → header scrolls away and stays gone',
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: CodeBlock(
+              'SliverPersistentHeader(\n'
+              '  pinned: true,\n'
+              '  delegate: MyHeaderDelegate(\n'
+              '    minHeight: 60, maxHeight: 150,\n'
+              '  ),\n'
+              ')',
             ),
           ),
 
+          // Section 1 — Pinned
+          const SliverToBoxAdapter(
+            child: InfoBox(
+              type: InfoBoxType.example,
+              title: 'Section 1 — pinned: true',
+              body:
+                  'This header stays glued to the top of the screen as you scroll past it. Scroll down to see it in action.',
+            ),
+          ),
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _CustomHeaderDelegate(
+              minHeight: 56,
+              maxHeight: 160,
+              title: 'Section 1 — Pinned',
+              color: Colors.blueAccent,
+              icon: Icons.push_pin_rounded,
+            ),
+          ),
           SliverList(
-            delegate: SliverChildBuilderDelegate((
-              BuildContext context,
-              int index,
-            ) {
-              return ListTile(title: Text('Item $index in Section 1'));
-            }, childCount: 10),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => ListTile(
+                leading: const Icon(Icons.circle_outlined, size: 16),
+                title: Text('Item ${index + 1} in Section 1'),
+              ),
+              childCount: 12,
+            ),
           ),
 
+          // Section 2 — Floating
+          const SliverToBoxAdapter(
+            child: InfoBox(
+              type: InfoBoxType.example,
+              title: 'Section 2 — floating: true',
+              body:
+                  'This header re-appears immediately when you start scrolling up, even if you\'re not at the top.',
+            ),
+          ),
           SliverPersistentHeader(
             pinned: false,
             floating: true,
             delegate: _CustomHeaderDelegate(
-              minHeight: 60,
+              minHeight: 56,
               maxHeight: 120,
-              title: 'Section 2 (Floating)',
+              title: 'Section 2 — Floating',
               color: Colors.greenAccent,
+              icon: Icons.unfold_more_double_rounded,
             ),
           ),
-
           SliverList(
-            delegate: SliverChildBuilderDelegate((
-              BuildContext context,
-              int index,
-            ) {
-              return ListTile(title: Text('Item $index in Section 2'));
-            }, childCount: 20),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => ListTile(
+                leading: const Icon(Icons.circle_outlined, size: 16),
+                title: Text('Item ${index + 1} in Section 2'),
+              ),
+              childCount: 20,
+            ),
           ),
+          const SliverToBoxAdapter(child: SizedBox(height: 40)),
         ],
       ),
     );
@@ -70,12 +121,14 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double maxHeight;
   final String title;
   final Color color;
+  final IconData icon;
 
   _CustomHeaderDelegate({
     required this.minHeight,
     required this.maxHeight,
     required this.title,
     required this.color,
+    required this.icon,
   });
 
   @override
@@ -90,33 +143,43 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    // Calculate how much it's shrunk from 0.0 to 1.0
     final diff = maxHeight - minHeight;
     final progress = diff == 0 ? 0.0 : (shrinkOffset / diff).clamp(0.0, 1.0);
 
     return Container(
-      color: color,
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.25),
+        border: Border(
+          bottom: BorderSide(color: color.withValues(alpha: 0.5), width: 1.5),
+        ),
+      ),
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // Background that fades out as you scroll
+          // Background icon fades away as it shrinks
           Opacity(
-            opacity: 1 - progress,
-            child: const Center(
-              child: Icon(Icons.image, size: 80, color: Colors.white54),
+            opacity: (1 - progress).clamp(0.0, 1.0),
+            child: Center(
+              child: Icon(icon, size: 64, color: color.withValues(alpha: 0.4)),
             ),
           ),
-          // Title that moves based on scroll progress
+          // Title animates down-right to a toolbar-like position
           Positioned(
-            left: 16.0,
-            bottom: 16.0 + (progress * 20), // Moves up slightly as it shrinks
-            child: Text(
-              title,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24.0 - (progress * 6), // Gets smaller
-                fontWeight: FontWeight.bold,
-              ),
+            left: 16,
+            bottom: 12 + (progress * 4).clamp(0.0, 16.0),
+            child: Row(
+              children: [
+                Icon(icon, color: color, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: color,
+                    fontSize: 20.0 - (progress * 4),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -125,10 +188,10 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  bool shouldRebuild(_CustomHeaderDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        title != oldDelegate.title ||
-        color != oldDelegate.color;
-  }
+  bool shouldRebuild(_CustomHeaderDelegate old) =>
+      maxHeight != old.maxHeight ||
+      minHeight != old.minHeight ||
+      title != old.title ||
+      color != old.color ||
+      icon != old.icon;
 }
