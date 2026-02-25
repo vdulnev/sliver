@@ -63,7 +63,7 @@ class Lesson4PersistentHeaderScreen extends StatelessWidget {
           SliverPersistentHeader(
             pinned: true,
             delegate: _CustomHeaderDelegate(
-              minHeight: 0,
+              minHeight: 56,
               maxHeight: 160,
               title: 'Section 1 — Pinned',
               color: Colors.blue,
@@ -94,7 +94,7 @@ class Lesson4PersistentHeaderScreen extends StatelessWidget {
             pinned: true,
             floating: false,
             delegate: _CustomHeaderDelegate(
-              minHeight: 0,
+              minHeight: 56,
               maxHeight: 120,
               title: 'Section 2 — Floating',
               color: Colors.greenAccent,
