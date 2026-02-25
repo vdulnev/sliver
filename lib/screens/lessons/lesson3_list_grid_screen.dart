@@ -147,7 +147,7 @@ class _Lesson3ListGridScreenState extends State<Lesson3ListGridScreen>
           padding: const EdgeInsets.symmetric(horizontal: 16),
           sliver: SliverGrid(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
+              crossAxisCount: 4,
               mainAxisSpacing: 8,
               crossAxisSpacing: 8,
               childAspectRatio: 1.1,
@@ -174,14 +174,14 @@ class _Lesson3ListGridScreenState extends State<Lesson3ListGridScreen>
           padding: const EdgeInsets.symmetric(horizontal: 16),
           sliver: SliverGrid(
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 160,
+              maxCrossAxisExtent: 100,
               mainAxisSpacing: 8,
               crossAxisSpacing: 8,
               childAspectRatio: 1.3,
             ),
             delegate: SliverChildBuilderDelegate(
               (context, index) => _gridCell(index, Colors.accents),
-              childCount: 9,
+              childCount: 20,
             ),
           ),
         ),
